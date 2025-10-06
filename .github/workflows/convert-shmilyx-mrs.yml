@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # 支持手动触发
 
 permissions:
-  contents: write  # 授予写权限，修复之前 403 错误
+  contents: write  # 授予写权限
 
 jobs:
   convert:
@@ -14,6 +14,9 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+
+    - name: Pull Latest Changes  # 新增：拉取远程最新变化，解决分歧
+      run: git pull origin main --rebase
 
     - name: Setup mihomo
       run: |
@@ -38,7 +41,7 @@ jobs:
         echo "转换完成：Xdirect.mrs 和 x.mrs"
 
     - name: Commit MRS Files
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v6  # 更新到 v6
       with:
         commit_message: "Auto-update MRS from shmilyx/Rule lists"
         file_pattern: "*.mrs"
